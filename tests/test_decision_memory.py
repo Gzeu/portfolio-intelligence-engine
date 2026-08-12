@@ -49,7 +49,7 @@ def test_promotion_rejects_when_sample_too_small() -> None:
 
 
 def test_promotion_passes_when_all_gates_are_satisfied() -> None:
-    observations = [CalibrationBucketObservation(declared_confidence=Decimal("0.75"), was_correct=(i < 72)) for i in range(150)]
+    observations = [CalibrationBucketObservation(declared_confidence=Decimal("0.75"), was_correct=(i < 113)) for i in range(150)]
     calibration = build_calibration_record("EGLDUSDT", "15m", observations)
     request = PromotionRequest(candidate_name="breakout_v2", sample_count=150, walk_forward_passed=True, out_of_sample_passed=True, cost_aware_validation_passed=True, max_drawdown=Decimal("0.06"))
     decision = evaluate_promotion(request, calibration)

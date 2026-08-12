@@ -23,6 +23,7 @@ def arbitrate(
 
     if portfolio.drawdown >= settings.max_portfolio_drawdown:
         decision = DecisionAction.REJECT
+        approved_size = Decimal("0")
         reasons.append("portfolio drawdown limit already reached")
     elif simulation.worst_case_drawdown > settings.max_portfolio_drawdown:
         decision = DecisionAction.REDUCE_SIZE

@@ -18,9 +18,9 @@ def test_balanced_book_is_ready() -> None:
 
 
 def test_imbalance_degrades_but_does_not_block() -> None:
-    result = assess_market_quality(make_book(bid_qty="300", ask_qty="100"))
+    result = assess_market_quality(make_book(bid_qty="700", ask_qty="100"))
     assert result.status == MarketQualityStatus.DEGRADED
-    assert result.imbalance == Decimal("0.5")
+    assert result.imbalance == Decimal("0.75")
 
 
 def test_wide_spread_blocks() -> None:
