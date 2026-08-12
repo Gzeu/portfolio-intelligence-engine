@@ -1,0 +1,1 @@
+{"retCode":0,"retMsg":"OK","result":{"category":"linear","list":[{"symbol":"EGLDUSDT","contractType":"LinearPerpetual","status":"Trading","baseCoin":"EGLD","quoteCoin":"USDT","priceFilter":{"tickSize":"0.001"},"lotSizeFilter":{"qtyStep":"0.1"}}]},"time":1723474800000}
