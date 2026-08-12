@@ -14,7 +14,8 @@ class LedgerError(ValueError):
 @dataclass
 class PositionState:
     quantity: Decimal = Decimal("0")
-    average_entry: Decimal = Decimal("0")
+    average_entry: Decimal = Decimal("0")  # for unrealized PnL (excludes fees)
+    cost_basis: Decimal = Decimal("0")      # for realized PnL (includes fees)
     realized_pnl: Decimal = Decimal("0")
 
 
@@ -36,16 +37,18 @@ class PortfolioLedger:
                 raise LedgerError("insufficient cash")
             new_quantity = position.quantity + quantity
             position.average_entry = ((position.average_entry * position.quantity) + notional) / new_quantity if new_quantity else Decimal("0")
+            position.cost_basis = ((position.cost_basis * position.quantity) + total_cost) / new_quantity if new_quantity else Decimal("0")
             position.quantity = new_quantity
             self.cash -= total_cost
         else:
             if quantity > position.quantity:
                 raise LedgerError("cannot sell more than current position")
-            position.realized_pnl += (report.fill_price - position.average_entry) * quantity - report.fee_quote
+            position.realized_pnl += (report.fill_price - position.cost_basis) * quantity - report.fee_quote
             position.quantity -= quantity
             self.cash += notional - report.fee_quote
             if position.quantity == 0:
                 position.average_entry = Decimal("0")
+                position.cost_basis = Decimal("0")
 
     def unrealized_pnl(self, prices: dict[str, Decimal]) -> Decimal:
         return sum(((prices[symbol] - position.average_entry) * position.quantity for symbol, position in self.positions.items() if symbol in prices), Decimal("0"))
